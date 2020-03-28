@@ -1,10 +1,9 @@
-const Blockchain = require('../blockchain');
 const uuid = require('uuid');
 
-const bitcoin = new Blockchain();
+const bitcoin = require('../Config/bitcoin-config');
 const nodeAddress = uuid.v1().split('-').join('');
 
-const bitcoinController = {
+const blockchainController = {
   get: {
     blockchain: function (req, res) {
       return res.send(bitcoin);
@@ -33,12 +32,13 @@ const bitcoinController = {
   },
   post: {
     transaction: function (req, res) {
+      const {amount, sender, recipient} = req.body;
       const blockIndex =
-        bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
+        bitcoin.createNewTransaction(amount, sender, recipient);
 
       return res.json({note: `Transaction will be added in block ${blockIndex}`});
     }
   }
 };
 
-module.exports = bitcoinController;
+module.exports = blockchainController;

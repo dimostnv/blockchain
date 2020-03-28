@@ -1,4 +1,5 @@
 const sha256 = require('sha256');
+const currentNodeUrl = process.argv[3];
 
 class Blockchain {
   constructor() {
@@ -6,6 +7,10 @@ class Blockchain {
     this.chain = [];
     // Storage for created transactions before placed in a block/mined
     this.newTransactions = [];
+    // URL of current blockchain node
+    this.currentNodeUrl = currentNodeUrl;
+    // Nodes of blockchain network
+    this.networkNodes = [];
     // Generate Genesis Block
     this.createNewBlock(100, '0', '0');
   }
