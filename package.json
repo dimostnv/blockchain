@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon dev/API/index.js",
+    "node_1": "nodemon dev/API/index.js 3001",
+    "node_2": "nodemon dev/API/index.js 3002",
+    "node_3": "nodemon dev/API/index.js 3003",
+    "node_4": "nodemon dev/API/index.js 3004",
+    "node_5": "nodemon dev/API/index.js 3005",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
