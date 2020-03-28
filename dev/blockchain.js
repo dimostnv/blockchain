@@ -19,7 +19,7 @@ class Blockchain {
     return sha256(dataAsString);
   }
 
-  createNewBlock (nonce, hash, previousHash) {
+  createNewBlock (nonce, hash, previousBlockHash) {
     const newBlock = {
       index: this.chain.length + 1,
       timestamp: Date.now(),
@@ -29,7 +29,7 @@ class Blockchain {
       // Hashed newTransactions
       hash,
       // Hashed data from previous block
-      previousHash
+      previousBlockHash
     };
 
     this.newTransactions = [];
@@ -47,7 +47,7 @@ class Blockchain {
 
     this.newTransactions.push(newTransaction);
 
-    return this.getLastBlock()['amount'] + 1;
+    return this.getLastBlock()['index'] + 1;
   }
 
   proofOfWork (previousBlockHash, blockData) {

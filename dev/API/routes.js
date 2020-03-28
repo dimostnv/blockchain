@@ -1,9 +1,9 @@
+const bitcoin = require('./controller');
+
 module.exports = (app) => {
-  app.get('/blockchain', (req, res) => {
-    res.send('Hello world')
-  });
+  app.get('/blockchain', bitcoin.get.blockchain);
 
-  app.post('/transaction');
+  app.post('/transaction', bitcoin.post.transaction);
 
-  app.get('/mine');
+  app.get('/mine', bitcoin.get.mine);
 };
