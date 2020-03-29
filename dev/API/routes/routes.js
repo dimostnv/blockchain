@@ -1,6 +1,8 @@
-const {blockchainController, networkController} = require('./Controllers/index');
+const userRouter = require('../routes/user-router');
+const {blockchainController, networkController} = require('../Controllers');
 
 module.exports = (app) => {
+  app.use(userRouter);
   app.get('/blockchain', blockchainController.get.blockchain);
   app.get('/mine', blockchainController.get.mine);
   app.get('/consensus', blockchainController.get.consensus);

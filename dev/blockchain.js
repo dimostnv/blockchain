@@ -16,14 +16,61 @@ class Blockchain {
     this.createNewBlock(100, '0', '0');
   }
 
+  getBlock (blockHash) {
+    let matchingBlock;
+    this.chain.forEach((block) => {
+      if (block.hash === blockHash) {
+        matchingBlock = block;
+      }
+    });
+
+    return matchingBlock;
+  };
+
   getLastBlock() {
     return this.chain[this.chain.length - 1];
+  };
+
+  getTransaction (transactionId) {
+    let matchingTransaction, transactionBlock;
+    this.chain.forEach((block) => {
+      block.transactions.forEach((transaction) => {
+        if (transaction.transactionId === transactionId) {
+          matchingTransaction = transaction;
+          transactionBlock = block;
+        }
+      });
+    });
+
+    return {matchingTransaction, transactionBlock};
+  };
+
+  getAddressData (address) {
+    const addressTransactions = [];
+    this.chain.forEach((block) => {
+      block.transactions.forEach((transaction) => {
+        if (transaction.sender === address || transaction.recipient === address) {
+          addressTransactions.push(transaction);
+        }
+      })
+    });
+
+    let balance = 0;
+    addressTransactions.forEach((transaction) => {
+      if (transaction.recipient === address) {
+        balance += transaction.amount;
+      } else if (transaction.sender === address) {
+        balance -= transaction.amount;
+      }
+    });
+
+    return {addressTransactions, balance};
   };
 
   hashBlock(previousBlockHash, blockData, nonce) {
     const dataAsString = previousBlockHash + nonce.toString() + JSON.stringify(blockData);
     return sha256(dataAsString);
-  }
+  };
 
   createNewBlock (nonce, hash, previousBlockHash) {
     const newBlock = {
@@ -51,13 +98,13 @@ class Blockchain {
       sender,
       recipient
     };
-  }
+  };
 
   addNewTransaction(transaction) {
     this.newTransactions.push(transaction);
 
     return this.getLastBlock()['index'] + 1;
-  }
+  };
 
   proofOfWork (previousBlockHash, blockData) {
     // Derive the nonce value that results in a correct data hash (starting with 0000)
@@ -70,7 +117,7 @@ class Blockchain {
     }
 
     return nonce;
-  }
+  };
 
   isValid (chain) {
     // A chain is valid if blocks are hashed correctly, have the correct data and the correct genesis block
@@ -102,7 +149,7 @@ class Blockchain {
     }
 
     return isValid;
-  }
+  };
 }
 
 module.exports = Blockchain;

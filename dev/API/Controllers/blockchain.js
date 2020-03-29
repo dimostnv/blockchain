@@ -96,6 +96,24 @@ const blockchainController = {
             });
           }
         }).catch((err) => console.log(err.message));
+    },
+    block: function (req, res) {
+      const {blockHash} = req.params;
+      const matchingBlock = bitcoin.getBlock(blockHash);
+
+      res.json({matchingBlock});
+    },
+    transaction: function (req, res) {
+      const {transactionId} = req.params;
+      const matchingTransaction = bitcoin.getTransaction(transactionId);
+
+      res.json({matchingTransaction});
+    },
+    account: function (req, res) {
+      const {address} = req.params;
+      const addressData = bitcoin.getAddressData(address);
+
+      res.json({addressData});
     }
   },
   post: {
