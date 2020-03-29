@@ -1,4 +1,5 @@
 const sha256 = require('sha256');
+const uuid = require('uuid');
 const currentNodeUrl = process.argv[3];
 
 class Blockchain {
@@ -44,13 +45,16 @@ class Blockchain {
   };
 
   createNewTransaction (amount, sender, recipient) {
-    const newTransaction = {
+    return {
+      transactionId: uuid.v1().split('-').join(''),
       amount,
       sender,
       recipient
     };
+  }
 
-    this.newTransactions.push(newTransaction);
+  addNewTransaction(transaction) {
+    this.newTransactions.push(transaction);
 
     return this.getLastBlock()['index'] + 1;
   }
@@ -66,6 +70,38 @@ class Blockchain {
     }
 
     return nonce;
+  }
+
+  isValid (chain) {
+    // A chain is valid if blocks are hashed correctly, have the correct data and the correct genesis block
+    let isValid = true;
+
+    // Genesis block validation
+    const genesisBlockIsValid =
+      chain[0].nonce === 100
+      && chain[0].hash === '0'
+      && chain[0].previousBlockHash === '0';
+
+    for (let i = 1; i < chain.length; i++) {
+      const prevBlock = chain[i-1];
+      const currBlock = chain[i];
+      // Hash validation
+      const hashIsValid = prevBlock.hash === currBlock.previousBlockHash;
+      // Data validation
+      const currBlockData = {
+        transactions: currBlock.transactions,
+        index: currBlock.index
+      };
+      const blockHash = this.hashBlock(currBlock.previousBlockHash, currBlockData, currBlock.nonce);
+      const dataIsValid = blockHash.substring(0, 4) === '0000';
+
+
+      if (!genesisBlockIsValid || !hashIsValid || !dataIsValid) {
+        isValid = false;
+      }
+    }
+
+    return isValid;
   }
 }
 

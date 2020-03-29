@@ -4,7 +4,7 @@ const rp = require('request-promise');
 const networkController = {
   post: {
     registerAndBroadcastNode: function (req, res) {
-      const newNodeUrl = req.body.newNodeUrl;
+      const {newNodeUrl} = req.body;
       // Register new node on network, if not existent
       if (bitcoin.networkNodes.indexOf(newNodeUrl) === -1) {
         bitcoin.networkNodes.push(newNodeUrl);
